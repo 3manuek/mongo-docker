@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Docker interface ip
-DOCKERIP="10.1.42.1"
+#DOCKERIP="10.1.42.1"
+DOCKERIP="172.17.0.1"
 LOCALPATH="/home/vagrant/docker"
 
 # Clean up

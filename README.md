@@ -1,3 +1,5 @@
+
+
 # Instant MongoDB sharded cluster
 This repository provides a Vagrantfile, Dockerfile and a bootstrap script to create MongoDB Cluster using a virtual machine built on Virtualbox software hypervisor. After setup is complete shared MongoDB sharded cluster on a single virtual machine running on your local machine.
 
@@ -10,6 +12,21 @@ MongoDB cluster consisted of the following docker containers
  - **skydns**: Used as internal DNS for containers.
 
 Unfortunately there are some hard coded timeouts due to timing issues with MongoDB.
+
+## Additionals
+
+Integrated https://github.com/tmcallaghan/sysbench-mongodb with some modifications (sharding collection setup).
+
+
+
+## TODO
+
+- Move to Mongo 3.2 
+- Integrate with ansible for failover and other admin tasks
+- Flexible sharding and replica set (dynamic instead of harcoded) 
+- Flexible Docker Machine setup (allow more than 1 docker machine)
+
+
 
 ## Installation:
 
