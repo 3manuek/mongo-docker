@@ -34,12 +34,16 @@ for (( i = 1; i < 4; i++ )); do
 	docker run --dns ${DOCKERIP} -P -i -t -e OPTIONS=" ${DOCKERIP}:$(docker port mongos${i}r1 27017|cut -d ":" -f2) /initiate.js" 3manuek/mongodb
 	sleep 30 # Waiting for set to be initiated
 	docker run --dns ${DOCKERIP} -P -i -t -e OPTIONS=" ${DOCKERIP}:$(docker port mongos${i}r1 27017|cut -d ":" -f2) /setupReplicaSet${i}.js" 3manuek/mongodb
-	# Create configserver
+	# Create configserver, now for 3.2 we need to create a config server per replicaset
 	docker run --dns ${DOCKERIP} --name configservers${i} -P -i -d -v ${LOCALPATH}/mongodata/${i}-cfg:/data/db -e OPTIONS="d --configsvr --dbpath /data/db --notablescan --noprealloc --smallfiles --port 27017" 3manuek/mongodb
 done
 
+# Huge changes have been made regarding config servers topology
+# https://docs.mongodb.org/manual/tutorial/deploy-shard-cluster/
+# 
 # Setup and configure mongo router
 docker run --dns ${DOCKERIP} --name mongos1 -P -i -d -e OPTIONS="s --configdb configservers1.mongodb.dev.docker:27017,configservers2.mongodb.dev.docker:27017,configservers3.mongodb.dev.docker:27017 --port 27017" 3manuek/mongodb
+#docker run --dns ${DOCKERIP} --name mongos1 -P -i -d -e OPTIONS="s --configdb configservers1.mongodb.dev.docker:27017,configservers2.mongodb.dev.docker:27017,configservers3.mongodb.dev.docker:27017 --port 27017" 3manuek/mongodb
 sleep 15 # Wait for mongo to start
 docker run --dns ${DOCKERIP} -P -i -t -e OPTIONS=" ${DOCKERIP}:$(docker port mongos1 27017|cut -d ":" -f2) /addShard.js" 3manuek/mongodb
 sleep 15 # Wait for sharding to be enabled
